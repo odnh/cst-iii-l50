@@ -1,0 +1,20 @@
+Host vm0
+     HostName 10.0.0.5
+     User L50
+     IdentityFile ~/.ssh/id_rsa
+Host vm1
+     HostName 10.0.0.8
+     User L50
+     IdentityFile ~/.ssh/id_rsa
+Host vm2
+     HostName 10.0.0.4
+     User L50
+     IdentityFile ~/.ssh/id_rsa
+Host vm3
+     HostName 10.0.0.7
+     User L50
+     IdentityFile ~/.ssh/id_rsa
+Host vm4
+     HostName 10.0.0.6
+     User L50
+     IdentityFile ~/.ssh/id_rsa
