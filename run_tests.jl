@@ -9,7 +9,7 @@ run(pipeline(`hostname`, stdout="~/data/test1"))
 
 # Experiment 0: Record machine details
 for i in 1:5
-  remotecall_wait(() -> run(`~/l50-tests/exp0.sh`), i)
+  remotecall_wait(() -> run(`bash ~/l50-tests/exp0.sh`), i)
 end
 
 # Experiment 1: RTT between all machines
