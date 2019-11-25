@@ -14,17 +14,23 @@ end
 
 # Experiment 1: RTT between all machines
 for i in 1:5
-  remotecall_wait(() -> pingall(i, "FLAGS", 1), i)
+  remotecall_wait(() -> pingall(i, "-c 1000 -f", 1), i)
 end
 
 # Expermient 2: Traceroute between all machines
 for i in 1:5
-  remotecall_wait(() -> tracerouteall(i, "FLAGS", 1), i)
+  remotecall_wait(() -> tracerouteall(i, "", 1), i)
 end
 
 # Experiment 3: iperf between all machines (tcp)
 for i in 1:5
-  remotecall_wait(() -> iperfall(i, "FLAGS", 1), i)
+  remotecall_wait(() -> iperfservstart("/dev/null", ""), i)
+end
+for i in 1:5
+  remotecall_wait(() -> iperfall(i, "", 1), i)
+end
+for i in 1:5
+  remotecall_wait(() -> iperfservstop(), i)
 end
 
 # Experiment 4: iperf 1 to 2
