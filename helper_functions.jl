@@ -4,7 +4,7 @@ vms = ["vm$i" for i in 0:4]
 
 function ping(src, dest, flags, out)
   destname = vms[dest]
-  return remotecall(() -> run(pipeline(`ping $flags $destname`, stdout=out, stderr="/home/L50/errors.txt")), src)
+  return remotecall(() -> run(pipeline(`sudo ping $flags $destname`, stdout=out, stderr="/home/L50/errors.txt")), src)
 end
 
 function traceroute(src, dest, flags, out)
