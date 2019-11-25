@@ -12,9 +12,6 @@ end
 println("Experiment 0 Complete")
 
 # Experiment 1: RTT between all machines
-for i in 1:5
-  remotecall_wait(() -> pingall(i, "-c 1000 -f", 1), i)
-end
 for src in 1:5, dest in 1:5
   wait(ping(src, dest, "-f -c 1000", "/home/L50/data/exp1/ping-$src-$dest"))
 end
