@@ -4,6 +4,9 @@ using Distributed
 # set up all the vms as distributed workers
 vms = ["vm$i" for i in 0:4]
 addprocs(vms[2:5])
+for i in 2:5
+  vms[i] = remotecall_fetch(gethostname, i)
+end
 
 # Experiment 0: Record machine details
 for i in 1:5
