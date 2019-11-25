@@ -2,12 +2,12 @@ include("helper_functions.jl")
 using Distributed
 
 # set up all the vms as distributed workers
-vms = ["vm0", "vm1", "vm2", "vm3", "vm4"]
-addprocs(vms)
+vms = ["vm$i" for i in 0:4]
+addprocs(vms[2:5])
 
 # Experiment 0: Record machine details
 for i in 1:5
-  remotecall_wait(() -> run(`bash '~'/l50-tests/exp0.sh`), i)
+  remotecall_wait(() -> run(`bash /home/L50/l50-tests/exp0.sh`), i)
 end
 
 println("Experiment 0 Complete")
