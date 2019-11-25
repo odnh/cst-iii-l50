@@ -39,7 +39,7 @@ end
 println("Experiment 4 Complete")
 
 # Experiment 5: iperf 1 to 2
-for dest in [(i, j) for i in 2:5, j in 2:5]
+for dest in [(i, j) for i in 2:5, j in 2:5 if i != j]
   dest1 = dest[1]
   dest2 = dest[2]
   src = 1
@@ -48,7 +48,7 @@ end
 println("Experiment 5 Complete")
 
 # Experiment 6: iperf 2 to 1
-for src in [(i, j) for i in 2:5, j in 2:5]
+for src in [(i, j) for i in 2:5, j in 2:5 if i != j]
   src1 = src[1]
   src2 = src[2]
   dest = 1
