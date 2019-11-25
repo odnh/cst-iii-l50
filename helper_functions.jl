@@ -17,7 +17,7 @@ function iperf(src, dest, flags, serverflags, out)
   srcname = vms[src]
   remotecall_wait(() -> run(pipeline(`iperf -s -D $serverflags`, stdout=devnull, stderr="/home/L50/errors.txt")), dest)
   remotecall_wait(() -> run(pipeline(`iperf -c $destname $flags`, stdout=out, stderr="/home/L50/errors.txt")), src)
-  remotecall_wait(() -> run(pipeline(`pkill iperf '||' killall -9 iperf '||' true`, stdout=devnull, stderr="/home/L50/errors.txt")), dest)
+  remotecall_wait(() -> run(pipeline(`pkill iperf`, stdout=devnull, stderr="/home/L50/errors.txt")), dest)
 end
 
 
@@ -33,8 +33,8 @@ function iperf2dest(src, dest1, dest2, flags, serverflags, outdir)
   i2 = remotecall(() -> run(pipeline(`iperf -c $destname2 $flags`, stdout=out2, stderr="/home/L50/errors.txt")), src)
   wait(i1)
   wait(i2)
-  remotecall_wait(() -> run(pipeline(`pkill iperf '||' killall -9 iperf '||' true`, stdout=devnull, stderr="/home/L50/errors.txt")), dest1)
-  remotecall_wait(() -> run(pipeline(`pkill iperf '||' killall -9 iperf '||' true`, stdout=devnull, stderr="/home/L50/errors.txt")), dest2)
+  remotecall_wait(() -> run(pipeline(`pkill iperf`, stdout=devnull, stderr="/home/L50/errors.txt")), dest1)
+  remotecall_wait(() -> run(pipeline(`pkill iperf`, stdout=devnull, stderr="/home/L50/errors.txt")), dest2)
 end
 
 function iperf2src(dest, src1, src2, flags, serverflags, outdir)
@@ -48,5 +48,5 @@ function iperf2src(dest, src1, src2, flags, serverflags, outdir)
   i2 = remotecall(() -> run(pipeline(`iperf -c $destname $flags`, stdout=out2, stderr="/home/L50/errors.txt")), src2)
   wait(i1)
   wait(i2)
-  remotecall_wait(() -> run(pipeline(`pkill iperf '||' killall -9 iperf '||' true`, stdout=devnull, stderr="/home/L50/errors.txt")), dest)
+  remotecall_wait(() -> run(pipeline(`pkill iperf`, stdout=devnull, stderr="/home/L50/errors.txt")), dest)
 end
