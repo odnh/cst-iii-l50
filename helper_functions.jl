@@ -9,7 +9,8 @@ function ping(dest, flags, out)
 end
 
 function pingall(src, flags, exp)
-  out = "~/data/exp" + exp
+  out = "~/data/exp" + exp + "/"
+  mkpath(out)
   dests = setdiff(collect(1:5), [src])
   for i in dests
     ping(dest, flags, out + "ping-"+src+"-"+i)
@@ -22,7 +23,8 @@ function traceroute(dest, flags, out)
 end
 
 function tracerouteall(src, flags, exp)
-  out = "~/data/exp" + exp
+  out = "~/data/exp" + exp + "/"
+  mkpath(out)
   dests = setdiff(collect(1:5), [src])
   for i in dests
     traceroute(dest, flags, out + "traceroute-"+src+"-"+i)
@@ -43,7 +45,8 @@ function iperf(dest, flags, out)
 end
 
 function iperfall(src, flags, exp)
-  out = "~/data/exp" + exp
+  out = "~/data/exp" + exp + "/"
+  mkpath(out)
   dests = setdiff(collect(1:5), [src])
   for i in dests
     iperf(dest, flags, out + "iperf-"+src+"-"+i)
