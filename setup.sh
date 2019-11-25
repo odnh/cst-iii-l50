@@ -14,5 +14,6 @@ rm julia-1.2.0-linux-x86_64.tar.gz
 mkdir ~/data
 
 # configure ssh
+rm -rf ~/.ssh
 cp -r ~/l50-tests/ssh ~/.ssh
 chmod 700 ~/.ssh
