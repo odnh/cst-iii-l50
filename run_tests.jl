@@ -32,7 +32,25 @@ for src in 1:5, dest in 1:5
 end
 println("Experiment 3 Complete")
 
-# Experiment 4: iperf 1 to 2
+# Experiment 4: bidirectional iperf between all machines (tcp)
+for src in 1:5, dest in 1:5
+  iperf(src, dest, "-d", "", "/home/L50/data/exp4/iperf-$src-$dest")
+end
+println("Experiment 4 Complete")
 
+# Experiment 5: iperf 1 to 2
+for dest in [(i, j) for i in 2:5, j in 2:5]
+  dest1 = dest[1]
+  dest2 = dest[2]
+  src = 1
+  iperf2dest(src, dest1, dest2, "", "", "/home/L50/data/exp5/iperf-$src-$dest1,$dest2")
+end
+println("Experiment 5 Complete")
 
 # Experiment 5: iperf 2 to 1
+for src in [(i, j) for i in 2:5, j in 2:5]
+  src1 = src[1]
+  src2 = src[2]
+  dest = 1
+  iperf2src(dest, src1, src2, "", "", "/home/L50/data/exp5/")
+end
