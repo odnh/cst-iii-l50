@@ -11,7 +11,7 @@ tar xf julia-1.2.0-linux-x86_64.tar.gz
 rm julia-1.2.0-linux-x86_64.tar.gz
 
 # create data folder
-mkdir ~/data
+mkdir -p ~/data/{exp0,exp1,exp2,exp3,exp4,exp5}
 
 # configure ssh
 rm -rf ~/.ssh

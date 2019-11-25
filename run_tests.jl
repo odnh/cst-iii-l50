@@ -9,30 +9,26 @@ addprocs(vms[2:5])
 for i in 1:5
   remotecall_wait(() -> run(`bash /home/L50/l50-tests/exp0.sh`), i)
 end
-
 println("Experiment 0 Complete")
 
 # Experiment 1: RTT between all machines
 for i in 1:5
   remotecall_wait(() -> pingall(i, "-c 1000 -f", 1), i)
 end
+for src in 1:5, dest in 1:5
+  wait(ping(src, dest, "-f -c 1000", "/home/L50/data/exp1/ping-$src-$dest"))
+end
 println("Experiment 1 Complete")
 
 # Expermient 2: Traceroute between all machines
-for i in 1:5
-  remotecall_wait(() -> tracerouteall(i, "", 1), i)
+for src in 1:5, dest in 1:5
+  wait(traceroute(src, dest, "", "/home/L50/data/exp2/traceroute-$src-$dest"))
 end
 println("Experiment 2 Complete")
 
 # Experiment 3: iperf between all machines (tcp)
-for i in 1:5
-  remotecall_wait(() -> iperfservstart("/dev/null", ""), i)
-end
-for i in 1:5
-  remotecall_wait(() -> iperfall(i, "", 1), i)
-end
-for i in 1:5
-  remotecall_wait(() -> iperfservstop(), i)
+for src in 1:5, dest in 1:5
+  iperf(src, dest, "", "", "/home/L50/data/exp3/iperf-$src-$dest")
 end
 println("Experiment 3 Complete")
 

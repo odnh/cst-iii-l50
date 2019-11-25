@@ -1,54 +1,23 @@
 # Helper functions for experiments
 
 vms = ["vm$i" for i in 0:4]
-ips = ["10.0.0.5", "10.0.0.8", "10.0.0.4", "10.0.0.7", "10.0.0.6"]
 
-function ping(dest, flags, out)
-  ip = ips[dest]
-  run(pipeline(`ping $flags $ip`, stdout=out, stderr="/home/L50/errors.txt"))
+function ping(src, dest, flags, out)
+  destname = vms[dest]
+  return remotecall(run(pipeline(`ping $flags $destname`, stdout=out, stderr="/home/L50/errors.txt")), src)
 end
 
-function pingall(src, flags, exp)
-  out = "/home/L50/data/exp$exp/"
-  mkpath(out)
-  dests = setdiff(collect(1:5), [src])
-  for i in dests
-    ping(dest, flags, out + "ping-$src-$i")
-  end
+function traceroute(src, dest, flags, out)
+  destname = vms[dest]
+  return remotecall(run(pipeline(`traceroute $flags $destname`, stdout=out, stderr="/home/L50/errors.txt")), src)
 end
 
-function traceroute(dest, flags, out)
-  ip = ips[dest]
-  run(pipeline(`traceroute $flags $ip`, stdout=out, stderr="/home/L50/errors.txt"))
+function iperf(src, dest, flags, serverflags, out)
+  destname = vms[dest]
+  srcname = vms[src]
+  remotecall_wait(run(pipeline(`iperf -s -D $serverflags`, stdout="/dev/null", stderr="/home/L50/errors.txt")), dest)
+  remotecall_wait(run(pipeline(`iperf -c $ip $flags`, stdout=out, stderr="/home/L50/errors.txt")), src)
+  remotecall_wait(run(pipeline(`pkill iperf`), stdout="/dev/null", stderr="/home/L50/errors.txt"), dest)
 end
 
-function tracerouteall(src, flags, exp)
-  out = "/home/L50/data/exp$exp/"
-  mkpath(out)
-  dests = setdiff(collect(1:5), [src])
-  for i in dests
-    traceroute(dest, flags, out + "traceroute-$src-$i")
-  end
-end
 
-function iperfservstart(flags, out)
-  run(pipeline(`iperf -s -D $flags`, stdout=out, stderr="/home/L50/errors.txt"))
-end
-
-function iperfservstop()
-  run(pipeline(`pkill iperf`, stdout="~errors.txt", stderr="/home/L50/errors.txt"))
-end
-
-function iperf(dest, flags, out)
-  ip = ips[dest]
-  run(pipeline(`iperf -c $ip $flags`, stdout=out, stderr="/home/L50/errors.txt"))
-end
-
-function iperfall(src, flags, exp)
-  out = "/home/L50/data/exp$exp/"
-  mkpath(out)
-  dests = setdiff(collect(1:5), [src])
-  for i in dests
-    iperf(dest, flags, out + "iperf-$src-$i")
-  end
-end
