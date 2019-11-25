@@ -16,4 +16,4 @@ mkdir ~/data
 # configure ssh
 rm -rf ~/.ssh
 cp -r ~/l50-tests/ssh ~/.ssh
-chmod 700 ~/.ssh
+chmod -R 700 ~/.ssh
