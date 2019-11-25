@@ -5,8 +5,6 @@ using Distributed
 vms = ["vm0", "vm1", "vm2", "vm3", "vm4"]
 addprocs(vms)
 
-run(pipeline(`hostname`, stdout="~/data/test1"))
-
 # Experiment 0: Record machine details
 for i in 1:5
   remotecall_wait(() -> run(`bash ~/l50-tests/exp0.sh`), i)
