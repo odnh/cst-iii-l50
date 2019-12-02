@@ -109,11 +109,11 @@ for dests in [(i, j) for i in 2:5, j in 2:5 if i <= j]
   end
 
   # client runs
-  clientprocs = zeros(length(dests))
+  clientprocs = Array{Future,1}()
   for i in 1:length(dests)
     dest = dests[i]
     destname = vms[dest]
-    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp6/iperf-$src-$dest-$dests", errfile, src)()
+    push!(clientprocs, remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp6/iperf-$src-$dest-$dests", errfile, src)())
   end
   for clientproc in clientprocs
     wait(clientproc)
@@ -138,11 +138,11 @@ for dests in [(i,j,k) for i in 2:5, j in 2:5, k in 2:5 if i <= j && j <= k]
   end
 
   # client runs
-  clientprocs = zeros(length(dests))
+  clientprocs = Array{Future,1}()
   for i in 1:length(dests)
     dest = dests[i]
     destname = vms[dest]
-    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp7/iperf-$src-$dest-$dests", errfile, src)()
+    push!(clientprocs, remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp7/iperf-$src-$dest-$dests", errfile, src)())
   end
   for clientproc in clientprocs
     wait(clientproc)
@@ -167,11 +167,11 @@ for dests in [(i,j,k,l) for i in 2:5, j in 2:5, k in 2:5, l in 2:5 if i <= j && 
   end
 
   # client runs
-  clientprocs = zeros(length(dests))
+  clientprocs = Array{Future,1}()
   for i in 1:length(dests)
     dest = dests[i]
     destname = vms[dest]
-    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp8/iperf-$src-$dest-$dests", errfile, src)()
+    push!(clientprocs, remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp8/iperf-$src-$dest-$dests", errfile, src)())
   end
   for clientproc in clientprocs
     wait(clientproc)
@@ -195,9 +195,9 @@ for srcs in [(i, j) for i in 2:5, j in 2:5 if i <= j]
   wait(remoterun(`iperf -s -D`, devnull, errfile, dest)())
 
   # client runs
-  clientprocs = zeros(length(srcs))
+  clientprocs = Array{Future,1}()
   for src in srcs
-    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp9/iperf-$srcs-$src-$dest", errfile, src)()
+    push!(clientprocs, remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp9/iperf-$srcs-$src-$dest", errfile, src)())
   end
   for clientproc in clientprocs
     wait(clientproc)
@@ -219,9 +219,9 @@ for srcs in [(i, j, k) for i in 2:5, j in 2:5, k in 2:5 if i <= j && j <= k]
   wait(remoterun(`iperf -s -D`, devnull, errfile, dest)())
 
   # client runs
-  clientprocs = zeros(length(srcs))
+  clientprocs = Array{Future,1}()
   for src in srcs
-    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp10/iperf-$srcs-$src-$dest", errfile, src)()
+    push!(clientprocs, remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp10/iperf-$srcs-$src-$dest", errfile, src)())
   end
   for clientproc in clientprocs
     wait(clientproc)
@@ -243,9 +243,9 @@ for srcs in [(i, j, k, l) for i in 2:5, j in 2:5, k in 2:5, l in 2:5 if i <= j &
   wait(remoterun(`iperf -s -D`, devnull, errfile, dest)())
 
   # client runs
-  clientprocs = zeros(length(srcs))
+  clientprocs = Array{Future,1}()
   for src in srcs
-    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp11/iperf-$srcs-$src-$dest", errfile, src)()
+    push!(clientprocs, remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp11/iperf-$srcs-$src-$dest", errfile, src)())
   end
   for clientproc in clientprocs
     wait(clientproc)
