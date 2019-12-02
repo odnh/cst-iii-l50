@@ -22,10 +22,13 @@ for locs in [(i, j) for i in 1:5, j in 1:5 if i !=j]
   src = locs[1]
   dest = locs[2]
   destname = vms[locs[2]]
-  flags = `-i 0.01 -c 1000 -q`
-  outfile = "/home/L50/data/exp1/ping-$src-$dest"
-  cmd = `sudo ping $flags $destname`
-  wait(remoterun(cmd, outfile, errfile, src)())
+  intervals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1]
+  for interval in intervals
+    flags = `-i $interval -c 1000 -q`
+    outfile = "/home/L50/data/exp1/ping-$src-$dest-$interval"
+    cmd = `sudo ping $flags $destname`
+    wait(remoterun(cmd, outfile, errfile, src)())
+  end
 end
 println("Experiment 1 Complete")
 
@@ -54,11 +57,30 @@ for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
 end
 println("Experiment 3 Complete")
 
-# Experiment 4: bidirectional iperf between all machines (tcp)
+# Experiment 4: iperf between all machines (udp)
+for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
+  src, dest = idx
+  flags = `-t 10 -i 1 -f m`
+
+  serverstartcmd = `iperf -s -u -D`
+  serverstopcmd = `pkill iperf`
+  bandwidths = ["150m", "200m", "250m", "300m", "350m"]
+
+  wait(remoterun(serverstartcmd, devnull, errfile, dest)())
+  for banwidth in bandwidths
+    clientcmd = `iperf -u -c $destname -b $bandwidth $flags`
+    outfile = "/home/L50/data/exp3/iperf-$src-$dest-$bandwidth"
+    wait(remoterun(clientcmd, outfile, errfile, src)())
+  end
+  wait(remoterun(serverstopcmd, devnull, errfile, dest)())
+end
+println("Experiment 4 Complete")
+
+# Experiment 5: bidirectional iperf between all machines (tcp)
 for idx in [(i, j) for i in 1:5, j in 1:5 if i <= j]
   src, dest = idx
   flags = `-t 10 -i 1 -f m -d`
-  outfile = "/home/L50/data/exp4/iperf-$src-$dest"
+  outfile = "/home/L50/data/exp5/iperf-$src-$dest"
 
   serverstartcmd = `iperf -s -D`
   clientcmd = `iperf -c $destname $flags`
@@ -68,9 +90,9 @@ for idx in [(i, j) for i in 1:5, j in 1:5 if i <= j]
   wait(remoterun(clientcmd, outfile, errfile, src)())
   wait(remoterun(serverstopcmd, devnull, errfile, dest)())
 end
-println("Experiment 4 Complete")
+println("Experiment 5 Complete")
 
-# Experiment 5: iperf 1 to 2
+# Experiment 6: iperf 1 to 2
 for dests in [(i, j) for i in 2:5, j in 2:5 if i <= j]
   src = 1
   flags = `-t 10 -i 1 -f m`
@@ -85,7 +107,7 @@ for dests in [(i, j) for i in 2:5, j in 2:5 if i <= j]
   for i in 1:length(dests)
     dest = dests[i]
     destname = vms[dest]
-    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp5/iperf-$src-$dest($dests)", errfile, src)()
+    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp6/iperf-$src-$dest-$dests", errfile, src)()
   end
   for clientproc in clientprocs
     wait(clientproc)
@@ -96,9 +118,9 @@ for dests in [(i, j) for i in 2:5, j in 2:5 if i <= j]
     wait(remoterun(`pkill iperf`, devnull, errfile, dest)())
   end
 end
-println("Experiment 5 Complete")
+println("Experiment 6 Complete")
 
-# Experiment 6: iperf 1 to 3
+# Experiment 7: iperf 1 to 3
 for dests in [(i,j,k) for i in 2:5, j in 2:5, k in 2:5 if i <= j && j <= k]
   src = 1
   flags = `-t 10 -i 1 -f m`
@@ -113,7 +135,7 @@ for dests in [(i,j,k) for i in 2:5, j in 2:5, k in 2:5 if i <= j && j <= k]
   for i in 1:length(dests)
     dest = dests[i]
     destname = vms[dest]
-    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp6/iperf-$src-$dest($dests)", errfile, src)()
+    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp7/iperf-$src-$dest-$dests", errfile, src)()
   end
   for clientproc in clientprocs
     wait(clientproc)
@@ -124,9 +146,9 @@ for dests in [(i,j,k) for i in 2:5, j in 2:5, k in 2:5 if i <= j && j <= k]
     wait(remoterun(`pkill iperf`, devnull, errfile, dest)())
   end
 end
-println("Experiment 6 Complete")
+println("Experiment 7 Complete")
  
-# Experiemnt 7: iperf 1 to 4
+# Experiemnt 8: iperf 1 to 4
 for dests in [(i,j,k,l) for i in 2:5, j in 2:5, k in 2:5, l in 2:5 if i <= j && j <= k && k <= l]
   src = 1
   flags = `-t 10 -i 1 -f m`
@@ -141,7 +163,7 @@ for dests in [(i,j,k,l) for i in 2:5, j in 2:5, k in 2:5, l in 2:5 if i <= j && 
   for i in 1:length(dests)
     dest = dests[i]
     destname = vms[dest]
-    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp7/iperf-$src-$dest($dests)", errfile, src)()
+    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp8/iperf-$src-$dest-$dests", errfile, src)()
   end
   for clientproc in clientprocs
     wait(clientproc)
@@ -152,9 +174,9 @@ for dests in [(i,j,k,l) for i in 2:5, j in 2:5, k in 2:5, l in 2:5 if i <= j && 
     wait(remoterun(`pkill iperf`, devnull, errfile, dest)())
   end
 end
-println("Experiment 7 Complete")
+println("Experiment 8 Complete")
 
-# Experiment 8: iperf 2 to 1
+# Experiment 9: iperf 2 to 1
 for srcs in [(i, j) for i in 2:5, j in 2:5 if i <= j]
   dest = 1
   destname = vms[dest]
@@ -166,7 +188,7 @@ for srcs in [(i, j) for i in 2:5, j in 2:5 if i <= j]
   # client runs
   clientprocs = zeros(length(srcs))
   for src in srcs
-    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp5/iperf-$src($srcs)-$dest", errfile, src)()
+    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp9/iperf-$srcs-$src-$dest", errfile, src)()
   end
   for clientproc in clientprocs
     wait(clientproc)
@@ -175,9 +197,9 @@ for srcs in [(i, j) for i in 2:5, j in 2:5 if i <= j]
   # shutdown servers
   wait(remoterun(`pkill iperf`, devnull, errfile, dest)())
 end
-println("Experiment 8 Complete")
+println("Experiment 9 Complete")
 
-# Experiment 9: iperf 3 to 1
+# Experiment 10: iperf 3 to 1
 for srcs in [(i, j, k) for i in 2:5, j in 2:5, k in 2:5 if i <= j && j <= k]
   dest = 1
   destname = vms[dest]
@@ -189,7 +211,7 @@ for srcs in [(i, j, k) for i in 2:5, j in 2:5, k in 2:5 if i <= j && j <= k]
   # client runs
   clientprocs = zeros(length(srcs))
   for src in srcs
-    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp9/iperf-$src($srcs)-$dest", errfile, src)()
+    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp10/iperf-$srcs-$src-$dest", errfile, src)()
   end
   for clientproc in clientprocs
     wait(clientproc)
@@ -198,9 +220,9 @@ for srcs in [(i, j, k) for i in 2:5, j in 2:5, k in 2:5 if i <= j && j <= k]
   # shutdown servers
   wait(remoterun(`pkill iperf`, devnull, errfile, dest)())
 end
-println("Experiment 9 Complete")
+println("Experiment 10 Complete")
 
-# Experiemnt 10: iperf 4 to 1
+# Experiemnt 11: iperf 4 to 1
 for srcs in [(i, j, k, l) for i in 2:5, j in 2:5, k in 2:5, l in 2:5 if i <= j && j <= k && k <= l]
   dest = 1
   destname = vms[dest]
@@ -212,7 +234,7 @@ for srcs in [(i, j, k, l) for i in 2:5, j in 2:5, k in 2:5, l in 2:5 if i <= j &
   # client runs
   clientprocs = zeros(length(srcs))
   for src in srcs
-    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp10/iperf-$src($srcs)-$dest", errfile, src)()
+    clientprocs[i] = remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp11/iperf-$srcs-$src-$dest", errfile, src)()
   end
   for clientproc in clientprocs
     wait(clientproc)
@@ -221,4 +243,4 @@ for srcs in [(i, j, k, l) for i in 2:5, j in 2:5, k in 2:5, l in 2:5 if i <= j &
   # shutdown servers
   wait(remoterun(`pkill iperf`, devnull, errfile, dest)())
 end
-println("Experiment 10 Complete")
+println("Experiment 11 Complete")
