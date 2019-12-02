@@ -23,7 +23,7 @@ for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
   destname = vms[dest]
   intervals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1]
   for interval in intervals
-    flags = `-i $interval -c 1000 -q`
+    flags = `-i $interval -c 100 -q`
     outfile = "/home/L50/data/exp1/ping-$src-$dest-$interval"
     cmd = `sudo ping $flags $destname`
     wait(remoterun(cmd, outfile, errfile, src)())
@@ -55,6 +55,7 @@ for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
   wait(remoterun(serverstartcmd, devnull, errfile, dest)())
   wait(remoterun(clientcmd, outfile, errfile, src)())
   wait(remoterun(serverstopcmd, devnull, errfile, dest)())
+  sleep(1) # so pkill and server start don't interfere
 end
 println("Experiment 3 Complete")
 
@@ -75,6 +76,7 @@ for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
     wait(remoterun(clientcmd, outfile, errfile, src)())
   end
   wait(remoterun(serverstopcmd, devnull, errfile, dest)())
+  sleep(1)
 end
 println("Experiment 4 Complete")
 
@@ -92,6 +94,7 @@ for idx in [(i, j) for i in 1:5, j in 1:5 if i <= j]
   wait(remoterun(serverstartcmd, devnull, errfile, dest)())
   wait(remoterun(clientcmd, outfile, errfile, src)())
   wait(remoterun(serverstopcmd, devnull, errfile, dest)())
+  sleep(1)
 end
 println("Experiment 5 Complete")
 
@@ -120,6 +123,7 @@ for dests in [(i, j) for i in 2:5, j in 2:5 if i <= j]
   for dest in unique(dests)
     wait(remoterun(`pkill iperf`, devnull, errfile, dest)())
   end
+  sleep(1)
 end
 println("Experiment 6 Complete")
 
@@ -148,6 +152,7 @@ for dests in [(i,j,k) for i in 2:5, j in 2:5, k in 2:5 if i <= j && j <= k]
   for dest in unique(dests)
     wait(remoterun(`pkill iperf`, devnull, errfile, dest)())
   end
+  sleep(1)
 end
 println("Experiment 7 Complete")
  
@@ -176,6 +181,7 @@ for dests in [(i,j,k,l) for i in 2:5, j in 2:5, k in 2:5, l in 2:5 if i <= j && 
   for dest in unique(dests)
     wait(remoterun(`pkill iperf`, devnull, errfile, dest)())
   end
+  sleep(1)
 end
 println("Experiment 8 Complete")
 
@@ -199,6 +205,7 @@ for srcs in [(i, j) for i in 2:5, j in 2:5 if i <= j]
 
   # shutdown servers
   wait(remoterun(`pkill iperf`, devnull, errfile, dest)())
+  sleep(1)
 end
 println("Experiment 9 Complete")
 
@@ -222,6 +229,7 @@ for srcs in [(i, j, k) for i in 2:5, j in 2:5, k in 2:5 if i <= j && j <= k]
 
   # shutdown servers
   wait(remoterun(`pkill iperf`, devnull, errfile, dest)())
+  sleep(1)
 end
 println("Experiment 10 Complete")
 
@@ -245,5 +253,6 @@ for srcs in [(i, j, k, l) for i in 2:5, j in 2:5, k in 2:5, l in 2:5 if i <= j &
 
   # shutdown servers
   wait(remoterun(`pkill iperf`, devnull, errfile, dest)())
+  sleep(1)
 end
 println("Experiment 11 Complete")
