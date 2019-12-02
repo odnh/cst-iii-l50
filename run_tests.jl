@@ -7,7 +7,7 @@ errfile = "/home/L50/errors.log"
 
 # helper functions
 function remoterun(cmd, outfile, errfile, loc)
-  return () -> remotecall(() -> run(pipeline(cmd, stdout=outfile, stderr=errfile), loc))
+  return () -> remotecall(() -> run(pipeline(cmd, stdout=outfile, stderr=errfile)), loc)
 end
 
 # Experiment 0: Record machine details
