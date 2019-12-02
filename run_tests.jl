@@ -18,8 +18,9 @@ end
 println("Experiment 0 Complete")
 
 # Experiment 1: RTT between all machines
-for idx in [(i, j) for i in 1:5, j in 1:5 if i !=j]
+for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
   src, dest = idx
+  destname = vms[dest]
   intervals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1]
   for interval in intervals
     flags = `-i $interval -c 1000 -q`
@@ -33,6 +34,7 @@ println("Experiment 1 Complete")
 # Experiment 2: Traceroute between all machines
 for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
   src, dest = idx
+  destname = vms[dest]
   outfile = "/home/L50/data/exp2/traceroute-$src-$dest"
   cmd = `traceroute $destname`
   wait(remoterun(cmd, outfile, errfile, src)())
@@ -42,6 +44,7 @@ println("Experiment 2 Complete")
 # Experiment 3: iperf between all machines (tcp)
 for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
   src, dest = idx
+  destname = vms[dest]
   flags = `-t 10 -i 1 -f m`
   outfile = "/home/L50/data/exp3/iperf-$src-$dest"
 
@@ -58,6 +61,7 @@ println("Experiment 3 Complete")
 # Experiment 4: iperf between all machines (udp)
 for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
   src, dest = idx
+  destname = vms[dest]
   flags = `-t 10 -i 1 -f m`
 
   serverstartcmd = `iperf -s -u -D`
@@ -77,6 +81,7 @@ println("Experiment 4 Complete")
 # Experiment 5: bidirectional iperf between all machines (tcp)
 for idx in [(i, j) for i in 1:5, j in 1:5 if i <= j]
   src, dest = idx
+  destname = vms[dest]
   flags = `-t 10 -i 1 -f m -d`
   outfile = "/home/L50/data/exp5/iperf-$src-$dest"
 
