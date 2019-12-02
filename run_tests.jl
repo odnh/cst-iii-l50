@@ -22,17 +22,16 @@ for locs in [(i, j) for i in 1:5, j in 1:5 if i !=j]
   src = locs[1]
   dest = locs[2]
   destname = vms[locs[2]]
-  flags = `-f -c 1000`
+  flags = `-i 0.01 -c 1000 -q`
   outfile = "/home/L50/data/exp1/ping-$src-$dest"
   cmd = `sudo ping $flags $destname`
   wait(remoterun(cmd, outfile, errfile, src)())
 end
 println("Experiment 1 Complete")
 
-# Expermient 2: Traceroute between all machines
-for locs in [(i, j) for i in 1:5, j in 1:5 i != j]
-  src = locs[1]
-  dest = locs[2]
+# Experiment 2: Traceroute between all machines
+for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
+  src, dest = idx
   outfile = "/home/L50/data/exp2/traceroute-$src-$dest"
   cmd = `traceroute $destname`
   wait(remoterun(cmd, outfile, errfile, src)())
@@ -40,9 +39,8 @@ end
 println("Experiment 2 Complete")
 
 # Experiment 3: iperf between all machines (tcp)
-for locs in [(i, j) for i in 1:5, j in 1:5 i != j]
-  src = locs[1]
-  dest = locs[2]
+for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
+  src, dest = idx
   flags = `-t 10 -i 1 -f m`
   outfile = "/home/L50/data/exp3/iperf-$src-$dest"
 
@@ -57,9 +55,8 @@ end
 println("Experiment 3 Complete")
 
 # Experiment 4: bidirectional iperf between all machines (tcp)
-for locs in [(i, j) for i in 1:5, j in 1:5 i != j]
-  src = locs[1]
-  dest = locs[2]
+for idx in [(i, j) for i in 1:5, j in 1:5 if i <= j]
+  src, dest = idx
   flags = `-t 10 -i 1 -f m -d`
   outfile = "/home/L50/data/exp4/iperf-$src-$dest"
 
