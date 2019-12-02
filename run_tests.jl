@@ -70,7 +70,7 @@ for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
   bandwidths = ["150m", "200m", "250m", "300m", "350m"]
 
   wait(remoterun(serverstartcmd, devnull, errfile, dest)())
-  for banwidth in bandwidths
+  for bandwidth in bandwidths
     clientcmd = `iperf -u -c $destname -b $bandwidth $flags`
     outfile = "/home/L50/data/exp3/iperf-$src-$dest-$bandwidth"
     wait(remoterun(clientcmd, outfile, errfile, src)())
