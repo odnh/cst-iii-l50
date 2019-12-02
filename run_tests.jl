@@ -18,10 +18,8 @@ end
 println("Experiment 0 Complete")
 
 # Experiment 1: RTT between all machines
-for locs in [(i, j) for i in 1:5, j in 1:5 if i !=j]
-  src = locs[1]
-  dest = locs[2]
-  destname = vms[locs[2]]
+for idx in [(i, j) for i in 1:5, j in 1:5 if i !=j]
+  src, dest = idx
   intervals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1]
   for interval in intervals
     flags = `-i $interval -c 1000 -q`

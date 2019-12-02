@@ -4,7 +4,8 @@
 
 for i in {1..4}
 do
-  ssh "vm$i" 'rm -rf ~/data; mkdir -p ~/data/{exp0,exp1,exp2,exp3,exp4,exp5}'
+  ssh "vm$i" 'rm -rf ~/data; rm ~/errors.log; mkdir -p ~/data/exp{0..11}'
 done
 rm -rf ~/data
-mkdir -p ~/data/{exp0,exp1,exp2,exp3,exp4,exp5}
+rm ~/errors.log
+mkdir -p ~/data/exp{0..11}

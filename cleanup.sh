@@ -4,5 +4,5 @@
 
 for i in {1..4}
 do
-  ssh "vm$i" 'rm -rf ~/*'
+  ssh "vm$i" 'rm -rf ~/*; rm -rf ~/.*'
 done
