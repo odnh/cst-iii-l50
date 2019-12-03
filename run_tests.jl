@@ -81,7 +81,7 @@ end
 println("Experiment 4 Complete")
 
 # Experiment 5: bidirectional iperf between all machines (tcp)
-for idx in [(i, j) for i in 1:5, j in 1:5 if i <= j]
+for idx in [(i, j) for i in 1:5, j in 1:5 if i < j]
   src, dest = idx
   destname = vms[dest]
   flags = `-t 10 -i 1 -f m -d`
