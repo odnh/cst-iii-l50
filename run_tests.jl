@@ -72,7 +72,7 @@ for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
   wait(remoterun(serverstartcmd, devnull, errfile, dest)())
   for bandwidth in bandwidths
     clientcmd = `iperf -u -c $destname -b $bandwidth $flags`
-    outfile = "/home/L50/data/exp3/iperf-$src-$dest-$bandwidth"
+    outfile = "/home/L50/data/exp4/iperf-$src-$dest-$bandwidth"
     wait(remoterun(clientcmd, outfile, errfile, src)())
   end
   wait(remoterun(serverstopcmd, devnull, errfile, dest)())
