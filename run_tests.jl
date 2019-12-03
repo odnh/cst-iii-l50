@@ -196,7 +196,8 @@ for srcs in [(i, j) for i in 2:5, j in 2:5 if i <= j]
 
   # client runs
   clientprocs = Array{Future,1}()
-  for src in srcs
+  for i in 1:length(srcs)
+    src = srcs[i]
     push!(clientprocs, remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp9/iperf-$srcs-$src($i)-$dest", errfile, src)())
   end
   for clientproc in clientprocs
@@ -220,7 +221,8 @@ for srcs in [(i, j, k) for i in 2:5, j in 2:5, k in 2:5 if i <= j && j <= k]
 
   # client runs
   clientprocs = Array{Future,1}()
-  for src in srcs
+  for i in 1:length(srcs)
+    src = srcs[i]
     push!(clientprocs, remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp10/iperf-$srcs-$src($i)-$dest", errfile, src)())
   end
   for clientproc in clientprocs
@@ -244,7 +246,8 @@ for srcs in [(i, j, k, l) for i in 2:5, j in 2:5, k in 2:5, l in 2:5 if i <= j &
 
   # client runs
   clientprocs = Array{Future,1}()
-  for src in srcs
+  for i in 1:length(srcs)
+    src = srcs[i]
     push!(clientprocs, remoterun(`iperf -c $destname $flags`, "/home/L50/data/exp11/iperf-$srcs-$src($i)-$dest", errfile, src)())
   end
   for clientproc in clientprocs
