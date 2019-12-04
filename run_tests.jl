@@ -23,7 +23,7 @@ for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
   destname = vms[dest]
   intervals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1]
   for interval in intervals
-    flags = `-i $interval -c 100 -q`
+    flags = `-i $interval -c 100`
     outfile = "/home/L50/data/exp1/ping-$src-$dest-$interval"
     cmd = `sudo ping $flags $destname`
     wait(remoterun(cmd, outfile, errfile, src)())
