@@ -19,6 +19,7 @@ function crosstalk_start(in_use)
   for client in clients
     remoterun(`iperf -t 3000 -c $destname -d`, devnull, errfile, client)()
   end
+  sleep(1)
 end
 
 function crosstalk_end(in_use)
@@ -29,6 +30,7 @@ function crosstalk_end(in_use)
     wait(remoterun(`pkill iperf`, devnull, errfile, client)())
   end
   wait(remoterun(`pkill iperf`, devnull, errfile, server)())
+  sleep(1)
 end
 
 # Experiment 0: Record machine details
