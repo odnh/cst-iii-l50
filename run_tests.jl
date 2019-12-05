@@ -305,7 +305,7 @@ for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
   crosstalk_start([src, dest])
   destname = vms[dest]
   flags = `-t 10 -i 1 -f m`
-  outfile = "/home/L50/data/exp3/iperf-$src-$dest"
+  outfile = "/home/L50/data/exp13/iperf-$src-$dest"
 
   serverstartcmd = `iperf -s -D`
   clientcmd = `iperf -c $destname $flags`
