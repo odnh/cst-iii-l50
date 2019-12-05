@@ -259,3 +259,58 @@ for srcs in [(i, j, k, l) for i in 2:5, j in 2:5, k in 2:5, l in 2:5 if i <= j &
   sleep(1)
 end
 println("Experiment 11 Complete")
+
+# Experiment 12: RTT between all machines with crosstalk
+for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
+  src, dest = idx
+  crosstalk_start([src, dest])
+  destname = vms[dest]
+  intervals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1]
+  for interval in intervals
+    flags = `-i $interval -c 100`
+    outfile = "/home/L50/data/exp12/ping-$src-$dest-$interval"
+    cmd = `sudo ping $flags $destname`
+    wait(remoterun(cmd, outfile, errfile, src)())
+  end
+  crosstalk_start([src, dest])
+end
+println("Experiment 12 Complete")
+
+# Experiment 13: iperf between all machines (tcp) with crosstalk
+for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
+  src, dest = idx
+  crosstalk_start([src, dest])
+  destname = vms[dest]
+  flags = `-t 10 -i 1 -f m`
+  outfile = "/home/L50/data/exp3/iperf-$src-$dest"
+
+  serverstartcmd = `iperf -s -D`
+  clientcmd = `iperf -c $destname $flags`
+  serverstopcmd = `pkill iperf`
+
+  wait(remoterun(serverstartcmd, devnull, errfile, dest)())
+  wait(remoterun(clientcmd, outfile, errfile, src)())
+  wait(remoterun(serverstopcmd, devnull, errfile, dest)())
+  crosstalk_end([src, dest])
+  sleep(1)
+end
+println("Experiment 13 Complete")
+
+function crosstalk_start(nodes)
+  server = nodes[1]
+  destname = vms[server]
+  clients = nodes[2:end]
+  wait(remoterun(`iperf -s -D`, devnull, errfile, server)())
+  for client in clients
+    remoterun(`iperf -t 3000 -c $destname`, devnull, errfile, client)()
+  end
+end
+
+function crosstalk_end(nodes)
+  server = nodes[1]
+  clients = nodes[2:end]
+  for client in clients
+    wait(remoterun(`pkill iperf`, devnull, errfile, client)())
+  end
+  wait(remoterun(`pkill iperf`, devnull, errfile, server)())
+end
