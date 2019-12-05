@@ -10,7 +10,8 @@ function remoterun(cmd, outfile, errfile, loc)
   return () -> remotecall(() -> run(pipeline(cmd, stdout=outfile, stderr=errfile)), loc)
 end
 
-function crosstalk_start(nodes)
+function crosstalk_start(in_use)
+  nodes = setdiff(1:5, in_use)
   server = nodes[1]
   destname = vms[server]
   clients = nodes[2:end]
@@ -20,7 +21,8 @@ function crosstalk_start(nodes)
   end
 end
 
-function crosstalk_end(nodes)
+function crosstalk_end(in_use)
+  nodes = setdiff(1:5, in_use)
   server = nodes[1]
   clients = nodes[2:end]
   for client in clients
