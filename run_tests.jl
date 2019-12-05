@@ -10,6 +10,25 @@ function remoterun(cmd, outfile, errfile, loc)
   return () -> remotecall(() -> run(pipeline(cmd, stdout=outfile, stderr=errfile)), loc)
 end
 
+function crosstalk_start(nodes)
+  server = nodes[1]
+  destname = vms[server]
+  clients = nodes[2:end]
+  wait(remoterun(`iperf -s -D`, devnull, errfile, server)())
+  for client in clients
+    remoterun(`iperf -t 3000 -c $destname -d`, devnull, errfile, client)()
+  end
+end
+
+function crosstalk_end(nodes)
+  server = nodes[1]
+  clients = nodes[2:end]
+  for client in clients
+    wait(remoterun(`pkill iperf`, devnull, errfile, client)())
+  end
+  wait(remoterun(`pkill iperf`, devnull, errfile, server)())
+end
+
 # Experiment 0: Record machine details
 for i in 1:5
   cmd = `bash /home/L50/l50-tests/exp0.sh`
@@ -272,7 +291,7 @@ for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
     cmd = `sudo ping $flags $destname`
     wait(remoterun(cmd, outfile, errfile, src)())
   end
-  crosstalk_start([src, dest])
+  crosstalk_end([src, dest])
 end
 println("Experiment 12 Complete")
 
@@ -295,22 +314,3 @@ for idx in [(i, j) for i in 1:5, j in 1:5 if i != j]
   sleep(1)
 end
 println("Experiment 13 Complete")
-
-function crosstalk_start(nodes)
-  server = nodes[1]
-  destname = vms[server]
-  clients = nodes[2:end]
-  wait(remoterun(`iperf -s -D`, devnull, errfile, server)())
-  for client in clients
-    remoterun(`iperf -t 3000 -c $destname`, devnull, errfile, client)()
-  end
-end
-
-function crosstalk_end(nodes)
-  server = nodes[1]
-  clients = nodes[2:end]
-  for client in clients
-    wait(remoterun(`pkill iperf`, devnull, errfile, client)())
-  end
-  wait(remoterun(`pkill iperf`, devnull, errfile, server)())
-end
